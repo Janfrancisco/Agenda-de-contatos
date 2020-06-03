@@ -58,14 +58,7 @@ class _HomePageState extends State<HomePage> {
           },
           child: Icon(Icons.add),
           backgroundColor: Colors.red),
-      body: ListView.builder(
-        padding: EdgeInsets.all(10.0),
-        itemCount: contacts.length,
-        itemBuilder: (BuildContext ctx, int index) {
-          return contactCard(ctx, index);
-          //return cardContact(index, contacts); // usando um widget stateless
-        },
-      ),
+      body: _showWidget(),
     );
   }
 
@@ -199,12 +192,13 @@ class _HomePageState extends State<HomePage> {
     contactHelper.getAllContact().then((value) {
       setState(() {
         contacts = value;
+        print(contacts.length);
       });
     });
   }
 
   void _orderList(OrderOptions result) {
-    print('_orderList')
+    print('_orderList');
     switch (result) {
       case OrderOptions.orderaz:
         contacts.sort((a, b) {
@@ -218,6 +212,27 @@ class _HomePageState extends State<HomePage> {
         break;
     }
     setState(() {});
+  }
+
+  //Exibe um texto no centro da tela, caso a lista estiver vazia
+  Widget _showWidget() {
+    if (contacts.length > 0) {
+      return ListView.builder(
+        padding: EdgeInsets.all(10.0),
+        itemCount: contacts.length,
+        itemBuilder: (BuildContext ctx, int index) {
+          return contactCard(ctx, index);
+          //return cardContact(index, contacts); // usando um widget stateless
+        },
+      );
+    } else {
+      return Center(
+        child: Text(
+          'A lista está vazia!',
+          style: TextStyle(color: Colors.red, fontSize: 18.0),
+        ),
+      );
+    }
   }
 }
 
